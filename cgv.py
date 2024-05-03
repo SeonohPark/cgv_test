@@ -60,17 +60,17 @@ try:
     id = driver.find_element(By.ID, 'txtUserId')
     id.click()
     id.send_keys('pso0244')
-    time.sleep(2)
 
-    driver.implicitly_wait(10)
-    password = driver.find_element(By.ID, 'txtPassword')
-    password.click()
-    password.send_keys('dddd')
-    time.sleep(2)
+    failPassword = driver.find_element(By.ID, 'txtPassword')
+    failPassword.click()
+    failPassword.send_keys('dddd')
 
     driver.find_element(By.XPATH, '//*[@id="submit"]').click()
     time.sleep(2)
-    Keys.RETURN()
+
+    #로그인 실패 오류 컨트롤
+    alert = driver.switch_to.alert
+    alert.accept()
 
     print('TC_03 로그인 실패')
     result_pass_list.append(tc_progress)
@@ -81,11 +81,43 @@ try:
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
 
+  #cgv_04 로그인 성공
+  try:
+    time.sleep(2)
+    passId = driver.find_element(By.ID, 'txtUserId')
+    passId.clear()
+    passId.click()
+    passId.send_keys('pso0244')
+
+    driver.implicitly_wait(10)
+    password = driver.find_element(By.ID, 'txtPassword')
+    password.clear()
+    password.click()
+    password.send_keys('tjsdh316+')
+
+    time.sleep(2)
+    driver.find_element(By.XPATH, '//*[@id="submit"]').click()
+    
+    driver.implicitly_wait(10)
+    if driver.find_element(By.CLASS_NAME, 'logout').is_displayed():
+      print('TC_04 로그인 성공')
+      result_pass_list.append(tc_progress)
+    else:
+      print('로그인 후 메인화면 이동 실패')
+
+    time.sleep(30)
+
+  except Exception as e:
+    fail_reason = '로그인 성공 테스트 실패'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+
 except Exception as e:
   print('에러가 발생하여 테스트 종료:', e)
   driver.quit()
   sys.exit(1)
 
 finally:
-  print('##########테스트 스크립트 종료.##########')
+  print('##########테스트 스크립트 종료##########')
   driver.quit()
