@@ -43,13 +43,40 @@ try:
         time.sleep(5)
 
       except Exception as e:
-        fail_reason = '로그인 버튼 클릭 불가'
+        fail_reason = '로그인 페이지 진입 실패'
         print(fail_reason)
         result_fail_list.append(tc_progress)
         result_reason_list.append(fail_reason)
 
   except Exception as e:
     fail_reason = '로그인 버튼 미노출'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+
+  #cgv_03 로그인 실패
+  try: 
+    driver.implicitly_wait(10)
+    id = driver.find_element(By.ID, 'txtUserId')
+    id.click()
+    id.send_keys('pso0244')
+    time.sleep(2)
+
+    driver.implicitly_wait(10)
+    password = driver.find_element(By.ID, 'txtPassword')
+    password.click()
+    password.send_keys('dddd')
+    time.sleep(2)
+
+    driver.find_element(By.XPATH, '//*[@id="submit"]').click()
+    time.sleep(2)
+    Keys.RETURN()
+
+    print('TC_03 로그인 실패')
+    result_pass_list.append(tc_progress)
+
+  except Exception as e:
+    fail_reason = '로그인 오류 테스트 실패'
     print(fail_reason)
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
