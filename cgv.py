@@ -1,3 +1,4 @@
+# 대상을 찾고 -> 상태를 체크하고 -> 흐름을 제어 -> 액션을 전달
 import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -25,20 +26,20 @@ try:
   driver.implicitly_wait(10)
   driver.maximize_window()
   print('##################테스트 시작###################')
-  print('cgv_01 cgv홈페이지 접속 성공')
+  print('CGV_01 cgv홈페이지 접속 성공')
   print(driver.title)
   print(driver.current_url)
 
   # TC cgv_02 로그인 버튼 확인, 클릭
   try:
     if driver.find_element(By.CSS_SELECTOR, '#cgvwrap > div.header > div.header_content > div > ul > li:nth-child(2) > a > img').is_displayed():
-      print('TC_02_1 로그인 버튼 노출')
+      print('CGV_02_1 로그인 버튼 노출')
       result_pass_list.append(tc_progress)
       time.sleep(2) # 인터렉션 지연
 
       try:
         driver.find_element(By.XPATH, '//*[@id="cgvwrap"]/div[2]/div[1]/div/ul/li[1]/a').click()
-        print('TC_02_2 로그인 버튼 클릭')
+        print('CGV_02_2 로그인 버튼 클릭')
         result_pass_list.append(tc_progress)
         time.sleep(5)
 
@@ -72,7 +73,7 @@ try:
     alert = driver.switch_to.alert
     alert.accept()
 
-    print('TC_03 로그인 실패')
+    print('CGV_03 로그인 실패')
     result_pass_list.append(tc_progress)
 
   except Exception as e:
@@ -100,18 +101,31 @@ try:
     
     driver.implicitly_wait(10)
     if driver.find_element(By.CLASS_NAME, 'logout').is_displayed():
-      print('TC_04 로그인 성공')
+      print('CGV_04 로그인 성공')
       result_pass_list.append(tc_progress)
     else:
       print('로그인 후 메인화면 이동 실패')
-
-    time.sleep(30)
 
   except Exception as e:
     fail_reason = '로그인 성공 테스트 실패'
     print(fail_reason)
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
+
+  #cgv_05 검색 입력란 노출 확인
+  driver.implicitly_wait(10)
+  search = driver.find_element(By.ID, 'header_keyword')
+  if search.is_displayed():
+    print('cgv_05 검색어 입력란 노출 확인')
+    result_pass_list.append(tc_progress)
+
+  else:
+    print('CGV_05 검색어 입력란 노출 실패')
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+
+  #cgv_06 상영중이지 않은 검색어 입력 결과 확인
+  
 
 except Exception as e:
   print('에러가 발생하여 테스트 종료:', e)
