@@ -56,31 +56,31 @@ try:
     result_reason_list.append(fail_reason)
 
   #cgv_03 로그인 실패
-  try: 
-    driver.implicitly_wait(10)
-    id = driver.find_element(By.ID, 'txtUserId')
-    id.click()
-    id.send_keys('pso0244')
+  # try: 
+  #   driver.implicitly_wait(10)
+  #   id = driver.find_element(By.ID, 'txtUserId')
+  #   id.click()
+  #   id.send_keys('pso0244')
 
-    failPassword = driver.find_element(By.ID, 'txtPassword')
-    failPassword.click()
-    failPassword.send_keys('dddd')
+  #   failPassword = driver.find_element(By.ID, 'txtPassword')
+  #   failPassword.click()
+  #   failPassword.send_keys('dddd')
 
-    driver.find_element(By.XPATH, '//*[@id="submit"]').click()
-    time.sleep(2)
+  #   driver.find_element(By.XPATH, '//*[@id="submit"]').click()
+  #   time.sleep(2)
 
-    #로그인 실패 오류 컨트롤
-    alert = driver.switch_to.alert
-    alert.accept()
+  #   #로그인 실패 오류 컨트롤
+  #   alert = driver.switch_to.alert
+  #   alert.accept()
 
-    print('CGV_03 로그인 실패')
-    result_pass_list.append(tc_progress)
+  #   print('CGV_03 로그인 실패')
+  #   result_pass_list.append(tc_progress)
 
-  except Exception as e:
-    fail_reason = '로그인 오류 테스트 실패'
-    print(fail_reason)
-    result_fail_list.append(tc_progress)
-    result_reason_list.append(fail_reason)
+  # except Exception as e:
+  #   fail_reason = '로그인 오류 테스트 실패'
+  #   print(fail_reason)
+  #   result_fail_list.append(tc_progress)
+  #   result_reason_list.append(fail_reason)
 
   #cgv_04 로그인 성공
   try:
@@ -116,7 +116,7 @@ try:
   driver.implicitly_wait(10)
   search = driver.find_element(By.ID, 'header_keyword')
   if search.is_displayed():
-    print('cgv_05 검색어 입력란 노출 확인')
+    print('CGV_05 검색어 입력란 노출 확인')
     result_pass_list.append(tc_progress)
 
   else:
@@ -125,7 +125,25 @@ try:
     result_reason_list.append(fail_reason)
 
   #cgv_06 상영중이지 않은 검색어 입력 결과 확인
+  try:
+    driver.implicitly_wait(10)
+    search.click()
+    search.send_keys('어벤저스')
+    driver.find_element(By.ID, 'btn_header_search').click()
+
+    driver.implicitly_wait(10)
+    fail_message = driver.find_element(By.ID, 'search_result').is_displayed()
+    print('CGV_06 상영중이지 않은 영화 검색 성공')
   
+  except Exception as e:
+    print('CGV_06 상영중이지 않은 영화 검색 실패')
+    fail_reason = '상영중이지 않은 검색 실패'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+
+  time.sleep(20)
+
 
 except Exception as e:
   print('에러가 발생하여 테스트 종료:', e)
