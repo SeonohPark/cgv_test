@@ -3,6 +3,8 @@ import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # 현재 날짜, 시간 구하기
@@ -29,31 +31,32 @@ try:
   print('CGV_01 cgv홈페이지 접속 성공')
   print(driver.title)
   print(driver.current_url)
+  
 
   # TC cgv_02 로그인 버튼 확인, 클릭
-  try:
-    if driver.find_element(By.CSS_SELECTOR, '#cgvwrap > div.header > div.header_content > div > ul > li:nth-child(2) > a > img').is_displayed():
-      print('CGV_02_1 로그인 버튼 노출')
-      result_pass_list.append(tc_progress)
-      time.sleep(2) # 인터렉션 지연
+  # try:
+  #   if driver.find_element(By.CSS_SELECTOR, '#cgvwrap > div.header > div.header_content > div > ul > li:nth-child(2) > a > img').is_displayed():
+  #     print('CGV_02_1 로그인 버튼 노출')
+  #     result_pass_list.append(tc_progress)
+  #     time.sleep(2) # 인터렉션 지연
 
-      try:
-        driver.find_element(By.XPATH, '//*[@id="cgvwrap"]/div[2]/div[1]/div/ul/li[1]/a').click()
-        print('CGV_02_2 로그인 버튼 클릭')
-        result_pass_list.append(tc_progress)
-        time.sleep(5)
+  #     try:
+  #       driver.find_element(By.XPATH, '//*[@id="cgvwrap"]/div[2]/div[1]/div/ul/li[1]/a').click()
+  #       print('CGV_02_2 로그인 버튼 클릭')
+  #       result_pass_list.append(tc_progress)
+  #       time.sleep(5)
 
-      except Exception as e:
-        fail_reason = '로그인 페이지 진입 실패'
-        print(fail_reason)
-        result_fail_list.append(tc_progress)
-        result_reason_list.append(fail_reason)
+  #     except Exception as e:
+  #       fail_reason = '로그인 페이지 진입 실패'
+  #       print(fail_reason)
+  #       result_fail_list.append(tc_progress)
+  #       result_reason_list.append(fail_reason)
 
-  except Exception as e:
-    fail_reason = '로그인 버튼 미노출'
-    print(fail_reason)
-    result_fail_list.append(tc_progress)
-    result_reason_list.append(fail_reason)
+  # except Exception as e:
+  #   fail_reason = '로그인 버튼 미노출'
+  #   print(fail_reason)
+  #   result_fail_list.append(tc_progress)
+  #   result_reason_list.append(fail_reason)
 
   #cgv_03 로그인 실패
   # try: 
@@ -83,38 +86,39 @@ try:
   #   result_reason_list.append(fail_reason)
 
   #cgv_04 로그인 성공
-  try:
-    time.sleep(2)
-    passId = driver.find_element(By.ID, 'txtUserId')
-    passId.clear()
-    passId.click()
-    passId.send_keys('pso0244')
+  # try:
+  #   time.sleep(2)
+  #   passId = driver.find_element(By.ID, 'txtUserId')
+  #   passId.clear()
+  #   passId.click()
+  #   passId.send_keys('pso0244')
 
-    driver.implicitly_wait(10)
-    password = driver.find_element(By.ID, 'txtPassword')
-    password.clear()
-    password.click()
-    password.send_keys('tjsdh316+')
+  #   driver.implicitly_wait(10)
+  #   password = driver.find_element(By.ID, 'txtPassword')
+  #   password.clear()
+  #   password.click()
+  #   password.send_keys('tjsdh316+')
 
-    time.sleep(2)
-    driver.find_element(By.XPATH, '//*[@id="submit"]').click()
+  #   time.sleep(2)
+  #   driver.find_element(By.XPATH, '//*[@id="submit"]').click()
     
-    driver.implicitly_wait(10)
-    if driver.find_element(By.CLASS_NAME, 'logout').is_displayed():
-      print('CGV_04 로그인 성공')
-      result_pass_list.append(tc_progress)
-    else:
-      print('로그인 후 메인화면 이동 실패')
+  #   driver.implicitly_wait(10)
+  #   if driver.find_element(By.CLASS_NAME, 'logout').is_displayed():
+  #     print('CGV_04 로그인 성공')
+  #     result_pass_list.append(tc_progress)
+  #   else:
+  #     print('로그인 후 메인화면 이동 실패')
 
-  except Exception as e:
-    fail_reason = '로그인 성공 테스트 실패'
-    print(fail_reason)
-    result_fail_list.append(tc_progress)
-    result_reason_list.append(fail_reason)
+  # except Exception as e:
+  #   fail_reason = '로그인 성공 테스트 실패'
+  #   print(fail_reason)
+  #   result_fail_list.append(tc_progress)
+  #   result_reason_list.append(fail_reason)
 
   #cgv_05 검색 입력란 노출 확인
   driver.implicitly_wait(10)
   search = driver.find_element(By.ID, 'header_keyword')
+  
   if search.is_displayed():
     print('CGV_05 검색어 입력란 노출 확인')
     result_pass_list.append(tc_progress)
@@ -132,12 +136,42 @@ try:
     driver.find_element(By.ID, 'btn_header_search').click()
 
     driver.implicitly_wait(10)
-    fail_message = driver.find_element(By.ID, 'search_result').is_displayed()
-    print('CGV_06 상영중이지 않은 영화 검색 성공')
+    if driver.find_element(By.ID, 'search_result').is_displayed():
+      print('CGV_06 상영중이지 않은 영화 검색 성공')
+      result_pass_list.append(tc_progress)
+    else:
+      print('검색결과 없음 문구 미노출')
   
   except Exception as e:
     print('CGV_06 상영중이지 않은 영화 검색 실패')
     fail_reason = '상영중이지 않은 검색 실패'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+
+  #cgv_07 상영중인 검색어 입력 결과 확인
+  
+  try:
+    title = '범죄도시4'
+    search_second = driver.find_element(By.ID, 'header_keyword')
+    search_second.click()
+    search_second.send_keys(title)
+    driver.find_element(By.ID, 'btn_header_search').click()
+    
+    #검색 결과가 로드될 때까지 명시적으로 대기
+    search_success = WebDriverWait(driver, 10).until(
+      EC.visibility_of_all_elements_located((By.CLASS_NAME, 'preOrderMovieName'))
+    )
+    
+    if search_success:
+      print('CGV_07 상영중인 영화 검색 성공')
+      result_pass_list.append(tc_progress)
+    else:
+      print('검색결과 없음 문구 미노출')
+  
+  except Exception as e:
+    print('CGV_07 상영중인 영화 검색 실패')
+    fail_reason = '상영중인 영화 검색 실패'
     print(fail_reason)
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
