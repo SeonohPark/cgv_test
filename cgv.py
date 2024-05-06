@@ -7,6 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
+
 
 
 # 현재 날짜, 시간 구하기
@@ -181,35 +183,21 @@ try:
   #cgv_08 예매하기 극장, 날짜 선택
   try:
     #cgv_08_1 예매하기 버튼 클릭
-    driver.find_element(By.CLASS_NAME, 'btn_style1').click()
-    
-    #cgv_08_1예매 페이지 노출목록 확인
     driver.implicitly_wait(10)
+    driver.find_element(By.CLASS_NAME, 'btn_style1').click()
     ticket_url = 'http://www.cgv.co.kr/ticket/?MOVIE_CD=20035938&MOVIE_CD_GROUP=20035938'
 
     if driver.current_url == ticket_url:
       print('CGV_08_1 예매 페이지 진입 성공')
     else:
       print('CGV_08_1 예매 페이지 진입 실패')
-  
-    # driver.implicitly_wait(10)
-    # driver.find_element(By.XPATH, '//*[@id="movie_list"]/ul/li[1]').click()
-    # print('CGV_08_2 영화 목록 선택 성공')
-      try:
-        driver.implicitly_wait(10)
-        driver.find_element(By.XPATH, '//*[@id="movie_list"]/ul/li[1]').click()
-        print('CGV_08_2 영화 목록 선택 성공')
-      except NoSuchElementException as e:
-        print('요소를 찾을 수 없습니다:', e)
 
-    driver.implicitly_wait(10)
-    driver.find_element(By.CLASS_NAME, 'GROUP1 DIGITAL proplist').click()
-    print('CGV_08_3 아트하우스 선택 성공')
-    
-    driver.implicitly_wait(10)
-    driver.find_element(By.CSS_SELECTOR, '#theater_area_list > ul > li.selected > a').click()
-    driver.find_element(By.CSS_SELECTOR, '#theater_area_list > ul > li.selected > div > ul > li:nth-child(7)').click()
+    # 상영관 선택
+    time.sleep(5)
+    print('ddssdf')
 
+    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[2]/div[1]/div[2]/div[2]/div/div[2]/div[1]/ul/li[2]/div/ul/li[7]/a').click()
+    print('dfdf')
 
   except Exception as e:
     print('CGV_08 예매 진행 영화, 극장선택 실패')
@@ -217,7 +205,6 @@ try:
     print(fail_reason)
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
-  
   
   time.sleep(10)
 
