@@ -6,6 +6,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from selenium.common.exceptions import NoSuchElementException
+
 
 # 현재 날짜, 시간 구하기
 now = time.strftime('%Y-$m_%d_%H_%M')
@@ -129,33 +131,33 @@ try:
     result_reason_list.append(fail_reason)
 
   #cgv_06 상영중이지 않은 검색어 입력 결과 확인
-  try:
-    driver.implicitly_wait(10)
-    search.click()
-    search.send_keys('어벤저스')
-    driver.find_element(By.ID, 'btn_header_search').click()
+  # try:
+  #   driver.implicitly_wait(10)
+  #   search.click()
+  #   search.send_keys('어벤저스')
+  #   driver.find_element(By.ID, 'btn_header_search').click()
 
-    driver.implicitly_wait(10)
-    if driver.find_element(By.ID, 'search_result').is_displayed():
-      print('CGV_06 상영중이지 않은 영화 검색 성공')
-      result_pass_list.append(tc_progress)
-    else:
-      print('검색결과 없음 문구 미노출')
+  #   driver.implicitly_wait(10)
+  #   if driver.find_element(By.ID, 'search_result').is_displayed():
+  #     print('CGV_06 상영중이지 않은 영화 검색 성공')
+  #     result_pass_list.append(tc_progress)
+  #   else:
+  #     print('검색결과 없음 문구 미노출')
   
-  except Exception as e:
-    print('CGV_06 상영중이지 않은 영화 검색 실패')
-    fail_reason = '상영중이지 않은 검색 실패'
-    print(fail_reason)
-    result_fail_list.append(tc_progress)
-    result_reason_list.append(fail_reason)
+  # except Exception as e:
+  #   print('CGV_06 상영중이지 않은 영화 검색 실패')
+  #   fail_reason = '상영중이지 않은 검색 실패'
+  #   print(fail_reason)
+  #   result_fail_list.append(tc_progress)
+  #   result_reason_list.append(fail_reason)
 
   #cgv_07 상영중인 검색어 입력 결과 확인
   
   try:
-    title = '범죄도시4'
+    driver.implicitly_wait(10)
     search_second = driver.find_element(By.ID, 'header_keyword')
     search_second.click()
-    search_second.send_keys(title)
+    search_second.send_keys('범죄도시4')
     driver.find_element(By.ID, 'btn_header_search').click()
     
     #검색 결과가 로드될 때까지 명시적으로 대기
@@ -176,7 +178,48 @@ try:
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
 
-  time.sleep(20)
+  #cgv_08 예매하기 극장, 날짜 선택
+  try:
+    #cgv_08_1 예매하기 버튼 클릭
+    driver.find_element(By.CLASS_NAME, 'btn_style1').click()
+    
+    #cgv_08_1예매 페이지 노출목록 확인
+    driver.implicitly_wait(10)
+    ticket_url = 'http://www.cgv.co.kr/ticket/?MOVIE_CD=20035938&MOVIE_CD_GROUP=20035938'
+
+    if driver.current_url == ticket_url:
+      print('CGV_08_1 예매 페이지 진입 성공')
+    else:
+      print('CGV_08_1 예매 페이지 진입 실패')
+  
+    # driver.implicitly_wait(10)
+    # driver.find_element(By.XPATH, '//*[@id="movie_list"]/ul/li[1]').click()
+    # print('CGV_08_2 영화 목록 선택 성공')
+      try:
+        driver.implicitly_wait(10)
+        driver.find_element(By.XPATH, '//*[@id="movie_list"]/ul/li[1]').click()
+        print('CGV_08_2 영화 목록 선택 성공')
+      except NoSuchElementException as e:
+        print('요소를 찾을 수 없습니다:', e)
+
+    driver.implicitly_wait(10)
+    driver.find_element(By.CLASS_NAME, 'GROUP1 DIGITAL proplist').click()
+    print('CGV_08_3 아트하우스 선택 성공')
+    
+    driver.implicitly_wait(10)
+    driver.find_element(By.CSS_SELECTOR, '#theater_area_list > ul > li.selected > a').click()
+    driver.find_element(By.CSS_SELECTOR, '#theater_area_list > ul > li.selected > div > ul > li:nth-child(7)').click()
+
+
+  except Exception as e:
+    print('CGV_08 예매 진행 영화, 극장선택 실패')
+    fail_reason = '예매 진행 영화, 극장선택 실패'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+  
+  
+  time.sleep(10)
 
 
 except Exception as e:
