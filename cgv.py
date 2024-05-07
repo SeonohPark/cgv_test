@@ -200,36 +200,32 @@ try:
 
   time.sleep(5)
   try:
-    # driver.implicitly_wait(10)
-    # driver.switch_to.frame('ticket_iframe')
-    # driver.find_element(By.XPATH, '//*[@id="theater_area_list"]/ul/li[2]/div/ul/li[7]/a').click()
-    # print('CGV_08_02 상영관 선택 성공')
-
-    # driver.find_element(By.XPATH, '//*[@id="date_list"]/ul/div/li[3]/a').click()
-    # print('CGV_08_03 날짜 선택 성공')
-
      # iframe으로 전환
     WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'ticket_iframe')))
 
     # 상영관 선택
+    # JavaScript를 활용해 클릭 강제 실행
     theater_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="theater_area_list"]/ul/li[2]/div/ul/li[7]/a')))
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", theater_selector)
     driver.execute_script("arguments[0].click();", theater_selector)
-    print('CGV_08_02 상영관 선택 성공')
+    print('CGV_08_05 상영관 선택 성공')
 
     # 날짜 선택
     time.sleep(3)
-    date_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="date_list"]/ul/div/li[2]/a')))
+    date_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="date_list"]/ul/div/li[3]/a')))
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", date_selector)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(date_selector))
     driver.execute_script("arguments[0].click();", date_selector)
-    print('CGV_08_03 날짜 선택 성공')
+    print('CGV_08_06 날짜 선택 성공')
+
+    # 시간 선택
+    time_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="ticket"]/div[2]/div[1]/div[4]/div[2]/div[3]/div[1]/div[1]/ul/li[2]/a')))
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(time_selector))
+    driver.execute_script("arguments[0].click();", time_selector)
+    print('CGV_08_07 날짜 선택 성공')
+
 
   except Exception as e:
-    # fail_reason = 'CGV_08_02 상영관 선택 실패'
-    # print(fail_reason)
-    # result_fail_list.append(tc_progress)
-    # result_reason_list.append(fail_reason)
     fail_reason = f'CGV_08_02 상영관 선택 실패: {str(e)}'
     print(fail_reason)
     result_fail_list.append(tc_progress)
