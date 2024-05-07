@@ -218,7 +218,8 @@ try:
     print('CGV_08_02 상영관 선택 성공')
 
     # 날짜 선택
-    date_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="date_list"]/ul/div/li[3]/a')))
+    time.sleep(3)
+    date_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="date_list"]/ul/div/li[2]/a')))
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", date_selector)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(date_selector))
     driver.execute_script("arguments[0].click();", date_selector)
