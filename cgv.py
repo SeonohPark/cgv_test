@@ -230,6 +230,50 @@ try:
     print(fail_reason)
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
+
+  # CGV_09 인원/좌석 선택
+  try:
+    #CGV_09_01 [좌석선택]버튼 클릭
+    driver.implicitly_wait(10)
+    driver.find_element(By.ID, 'tnb_step_btn_right').click()
+    print('CGV_09_01 좌석선택 버튼 클릭 성공')
+
+    #CGV_09_02 15세이상 관람 동의 팝업 노출 확인
+    driver.implicitly_wait(10)
+    pop = driver.find_element(By.ID, 'tnb_step_btn_right').is_displayed()
+
+    if pop:
+      print('CGV_09_02 15세관람 동의 팝업 노출')
+    else:
+      print('CGV_09_02 15세관람 동의 팝업 미노출')
+
+    #CGV_09_03 [동의하고 예매하기]버튼 클릭
+    driver.implicitly_wait(10)
+    pop.click()
+    print('CGV_09_03 15세 관람과 동의팝업 클릭')
+
+    #CGV_09_04 일반 [1]인원 클릭
+    driver.implicitly_wait(10)
+    driver.find_element(By.XPATH, '//*[@id="nop_group_adult"]/ul/li[2]/a').click()
+    print('CGV_09_04 인원 1명 선택 완료')
+
+    #CGV_09_05 활성된 좌석 클릭
+    driver.implicitly_wait(10)
+    
+    print('활성된 좌석 클릭')
+
+
+    #CGV_09_06 하단 [결제선택] 버튼 클릭
+    driver.implicitly_wait(10)
+    driver.find_element(By.ID, 'tnb_step_btn_right').click()
+    print('CGV_09_06 결제선택 버튼 클릭')
+
+  except Exception as e:
+    fail_reason = f'CGV_09 인원/좌석 선택 실패 : {str(e)}'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+  
   
   time.sleep(20)
 
