@@ -192,22 +192,49 @@ try:
     else:
       print('CGV_08_1 예매 페이지 진입 실패')
 
-    # 상영관 선택
-    time.sleep(5)
-    print('ddssdf')
-
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[2]/div[1]/div[2]/div[2]/div/div[2]/div[1]/ul/li[2]/div/ul/li[7]/a').click()
-    print('dfdf')
-
   except Exception as e:
-    print('CGV_08 예매 진행 영화, 극장선택 실패')
     fail_reason = '예매 진행 영화, 극장선택 실패'
     print(fail_reason)
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
-  
-  time.sleep(10)
 
+  time.sleep(5)
+  try:
+    # driver.implicitly_wait(10)
+    # driver.switch_to.frame('ticket_iframe')
+    # driver.find_element(By.XPATH, '//*[@id="theater_area_list"]/ul/li[2]/div/ul/li[7]/a').click()
+    # print('CGV_08_02 상영관 선택 성공')
+
+    # driver.find_element(By.XPATH, '//*[@id="date_list"]/ul/div/li[3]/a').click()
+    # print('CGV_08_03 날짜 선택 성공')
+
+     # iframe으로 전환
+    WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'ticket_iframe')))
+
+    # 상영관 선택
+    theater_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="theater_area_list"]/ul/li[2]/div/ul/li[7]/a')))
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", theater_selector)
+    driver.execute_script("arguments[0].click();", theater_selector)
+    print('CGV_08_02 상영관 선택 성공')
+
+    # 날짜 선택
+    date_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="date_list"]/ul/div/li[3]/a')))
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", date_selector)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(date_selector))
+    driver.execute_script("arguments[0].click();", date_selector)
+    print('CGV_08_03 날짜 선택 성공')
+
+  except Exception as e:
+    # fail_reason = 'CGV_08_02 상영관 선택 실패'
+    # print(fail_reason)
+    # result_fail_list.append(tc_progress)
+    # result_reason_list.append(fail_reason)
+    fail_reason = f'CGV_08_02 상영관 선택 실패: {str(e)}'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
+  
+  time.sleep(20)
 
 except Exception as e:
   print('에러가 발생하여 테스트 종료:', e)
