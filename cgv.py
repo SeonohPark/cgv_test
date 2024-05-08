@@ -13,6 +13,7 @@ from selenium.common.exceptions import TimeoutException
 
 # 현재 날짜, 시간 구하기
 now = time.strftime('%Y-$m_%d_%H_%M')
+today = time.strftime('%Y%m%d')
 
 result_pass_list = [] #pass한 TC ID를 가지고 있는 리스트
 result_fail_list = [] #fail한 TC ID를 가지고 있는 리스트
@@ -38,29 +39,28 @@ try:
   
 
   # TC cgv_02 로그인 버튼 확인, 클릭
-  # try:
-  #   if driver.find_element(By.CSS_SELECTOR, '#cgvwrap > div.header > div.header_content > div > ul > li:nth-child(2) > a > img').is_displayed():
-  #     print('CGV_02_1 로그인 버튼 노출')
-  #     result_pass_list.append(tc_progress)
-  #     time.sleep(2) # 인터렉션 지연
+  try:
+    if driver.find_element(By.CSS_SELECTOR, '#cgvwrap > div.header > div.header_content > div > ul > li:nth-child(2) > a > img').is_displayed():
+      print('CGV_02_1 로그인 버튼 노출')
+      result_pass_list.append(tc_progress)
+      time.sleep(2) # 인터렉션 지연
 
-  #     try:
-  #       driver.find_element(By.XPATH, '//*[@id="cgvwrap"]/div[2]/div[1]/div/ul/li[1]/a').click()
-  #       print('CGV_02_2 로그인 버튼 클릭')
-  #       result_pass_list.append(tc_progress)
-  #       time.sleep(5)
+      try:
+        driver.find_element(By.XPATH, '//*[@id="cgvwrap"]/div[2]/div[1]/div/ul/li[1]/a').click()
+        print('CGV_02_2 로그인 버튼 클릭')
+        result_pass_list.append(tc_progress)
 
-  #     except Exception as e:
-  #       fail_reason = '로그인 페이지 진입 실패'
-  #       print(fail_reason)
-  #       result_fail_list.append(tc_progress)
-  #       result_reason_list.append(fail_reason)
+      except Exception as e:
+        fail_reason = '로그인 페이지 진입 실패'
+        print(fail_reason)
+        result_fail_list.append(tc_progress)
+        result_reason_list.append(fail_reason)
 
-  # except Exception as e:
-  #   fail_reason = '로그인 버튼 미노출'
-  #   print(fail_reason)
-  #   result_fail_list.append(tc_progress)
-  #   result_reason_list.append(fail_reason)
+  except Exception as e:
+    fail_reason = '로그인 버튼 미노출'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
 
   #cgv_03 로그인 실패
   # try: 
@@ -90,34 +90,34 @@ try:
   #   result_reason_list.append(fail_reason)
 
   #cgv_04 로그인 성공
-  # try:
-  #   time.sleep(2)
-  #   passId = driver.find_element(By.ID, 'txtUserId')
-  #   passId.clear()
-  #   passId.click()
-  #   passId.send_keys('pso0244')
+  try:
+    time.sleep(2)
+    passId = driver.find_element(By.ID, 'txtUserId')
+    passId.clear()
+    passId.click()
+    passId.send_keys('pso0244')
 
-  #   driver.implicitly_wait(10)
-  #   password = driver.find_element(By.ID, 'txtPassword')
-  #   password.clear()
-  #   password.click()
-  #   password.send_keys('tjsdh316+')
+    driver.implicitly_wait(10)
+    password = driver.find_element(By.ID, 'txtPassword')
+    password.clear()
+    password.click()
+    password.send_keys('tjsdh316+')
 
-  #   time.sleep(2)
-  #   driver.find_element(By.XPATH, '//*[@id="submit"]').click()
+    time.sleep(2)
+    driver.find_element(By.XPATH, '//*[@id="submit"]').click()
     
-  #   driver.implicitly_wait(10)
-  #   if driver.find_element(By.CLASS_NAME, 'logout').is_displayed():
-  #     print('CGV_04 로그인 성공')
-  #     result_pass_list.append(tc_progress)
-  #   else:
-  #     print('로그인 후 메인화면 이동 실패')
+    driver.implicitly_wait(10)
+    if driver.find_element(By.CLASS_NAME, 'logout').is_displayed():
+      print('CGV_04 로그인 성공')
+      result_pass_list.append(tc_progress)
+    else:
+      print('로그인 후 메인화면 이동 실패')
 
-  # except Exception as e:
-  #   fail_reason = '로그인 성공 테스트 실패'
-  #   print(fail_reason)
-  #   result_fail_list.append(tc_progress)
-  #   result_reason_list.append(fail_reason)
+  except Exception as e:
+    fail_reason = '로그인 성공 테스트 실패'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
 
   #cgv_05 검색 입력란 노출 확인
   driver.implicitly_wait(10)
@@ -182,15 +182,16 @@ try:
 
   #cgv_08 예매하기 극장, 날짜 선택
   try:
-    #cgv_08_1 예매하기 버튼 클릭
+    #cgv_08_1 [예매하기] 버튼 클릭
     driver.implicitly_wait(10)
     driver.find_element(By.CLASS_NAME, 'btn_style1').click()
     ticket_url = 'http://www.cgv.co.kr/ticket/?MOVIE_CD=20035938&MOVIE_CD_GROUP=20035938'
 
+    #cgv_08_2 예매 페이지 진입 확인
     if driver.current_url == ticket_url:
-      print('CGV_08_1 예매 페이지 진입 성공')
+      print('CGV_08_2 예매 페이지 진입 성공')
     else:
-      print('CGV_08_1 예매 페이지 진입 실패')
+      print('CGV_08_2 예매 페이지 진입 실패')
 
   except Exception as e:
     fail_reason = '예매 진행 영화, 극장선택 실패'
@@ -200,29 +201,29 @@ try:
 
   time.sleep(5)
   try:
-     # iframe으로 전환
+    # iframe으로 전환
     WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'ticket_iframe')))
 
-    # 상영관 선택
+    # cgv_08_3 상영관 선택
     # JavaScript를 활용해 클릭 강제 실행
-    theater_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="theater_area_list"]/ul/li[2]/div/ul/li[7]/a')))
+    theater_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="theater_area_list"]/ul/li[1]/div/ul/li[2]/a')))
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", theater_selector)
     driver.execute_script("arguments[0].click();", theater_selector)
-    print('CGV_08_05 상영관 선택 성공')
+    print('CGV_08_3 상영관 선택 성공')
 
-    # 날짜 선택
+    # cgv_08_4 날짜 선택
     time.sleep(3)
     date_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="date_list"]/ul/div/li[3]/a')))
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", date_selector)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(date_selector))
     driver.execute_script("arguments[0].click();", date_selector)
-    print('CGV_08_06 날짜 선택 성공')
+    print('CGV_08_4 날짜 선택 성공')
 
-    # 시간 선택
+    # cgv_08_5 시간 선택
     time_selector = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="ticket"]/div[2]/div[1]/div[4]/div[2]/div[3]/div[1]/div[1]/ul/li[2]/a')))
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(time_selector))
     driver.execute_script("arguments[0].click();", time_selector)
-    print('CGV_08_07 날짜 선택 성공')
+    print('CGV_08_5 날짜 선택 성공')
 
 
   except Exception as e:
@@ -236,30 +237,54 @@ try:
     #CGV_09_01 [좌석선택]버튼 클릭
     driver.implicitly_wait(10)
     driver.find_element(By.ID, 'tnb_step_btn_right').click()
-    print('CGV_09_01 좌석선택 버튼 클릭 성공')
+    print('CGV_09_1 좌석선택 버튼 클릭 성공')
 
     #CGV_09_02 15세이상 관람 동의 팝업 노출 확인
     driver.implicitly_wait(10)
-    pop = driver.find_element(By.ID, 'tnb_step_btn_right').is_displayed()
+    pop = driver.find_element(By.CSS_SELECTOR, 'body > div.ft_layer_popup.popup_alert.popup_previewGradeInfo.ko > div.ft > a')
 
-    if pop:
-      print('CGV_09_02 15세관람 동의 팝업 노출')
+    if pop.is_displayed():
+      print('CGV_09_2 15세관람 동의 팝업 노출')
     else:
-      print('CGV_09_02 15세관람 동의 팝업 미노출')
+      print('CGV_09_2 15세관람 동의 팝업 미노출')
 
     #CGV_09_03 [동의하고 예매하기]버튼 클릭
     driver.implicitly_wait(10)
     pop.click()
-    print('CGV_09_03 15세 관람과 동의팝업 클릭')
+    print('CGV_09_3 15세 관람과 동의팝업 클릭')
 
     #CGV_09_04 일반 [1]인원 클릭
-    driver.implicitly_wait(10)
-    driver.find_element(By.XPATH, '//*[@id="nop_group_adult"]/ul/li[2]/a').click()
-    print('CGV_09_04 인원 1명 선택 완료')
+    # driver.implicitly_wait(10)
+    # driver.find_element(By.XPATH, '//*[@id="nop_group_adult"]/ul/li[2]/a').click()
+    # print('CGV_09_04 인원 1명 선택 완료')
+    seaat_selector = WebDriverWait(driver, 10).until(
+      EC.presence_of_element_located((By.XPATH, "//span[@class='no' and text()='1']"))
+    )
+    seaat_selector.click()
+    
+    current_number = 2
+    while current_number <= 5:
+      try:
+        element_sreader_mod = WebDriverWait(driver, 10).until(
+          EC.presence_of_element_located((By.XPATH, "//span[@class='sreader mod' and text()='선택불가']")) 
+        )
+        element_no_next = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, f"//span[@class='no' and text()='{current_number}']"))
+        )
+        element_no_next.click()
+        current_number += 1  # 다음 숫자로 이동
+      except NoSuchElementException:
+        # "선택불가" 텍스트가 없으면 루프를 종료합니다.
+        print(f"No further action needed, element with class 'no' and text '{current_number}' is clickable.")
+        break
+      except TimeoutException:
+        # 타임아웃 발생 시, 해당 숫자의 요소를 찾지 못했다고 가정하고 다음 숫자로 이동
+        print(f"Timeout occurred while trying to find element with class 'no' and text '{current_number}'.")
+        current_number += 1
 
     #CGV_09_05 활성된 좌석 클릭
     driver.implicitly_wait(10)
-    
+    driver.find_element(By.XPATH, '//*[@id="seats_list"]/div[1]/div[3]/div[2]/div/div[1]/a').click()
     print('활성된 좌석 클릭')
 
 
