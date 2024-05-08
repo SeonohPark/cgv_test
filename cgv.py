@@ -232,6 +232,7 @@ try:
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
 
+  time.sleep(3)
   # CGV_09 인원/좌석 선택
   try:
     #CGV_09_01 [좌석선택]버튼 클릭
@@ -254,33 +255,41 @@ try:
     print('CGV_09_3 15세 관람과 동의팝업 클릭')
 
     #CGV_09_04 일반 [1]인원 클릭
-    # driver.implicitly_wait(10)
-    # driver.find_element(By.XPATH, '//*[@id="nop_group_adult"]/ul/li[2]/a').click()
-    # print('CGV_09_04 인원 1명 선택 완료')
     seat_selector = WebDriverWait(driver, 10).until(
       EC.presence_of_element_located((By.XPATH, "//*[@id='nop_group_adult']/ul/li[2]/a"))
     )
     seat_selector.click()
-    
-    current_number = 2
-    while current_number <= 16:
-      try:
-        element_sreader_mod = WebDriverWait(driver, 10).until(
-          EC.presence_of_element_located((By.XPATH, "//span[@class='sreader mod' and text()='선택불가']")) 
-        )
-        element_no_next = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, f"//span[@class='no' and text()='{current_number}']"))
-        )
-        element_no_next.click()
-        current_number += 1  # 다음 숫자로 이동
-      except NoSuchElementException:
-        # "선택불가" 텍스트가 없으면 루프를 종료합니다.
-        print(f"No further action needed, element with class 'no' and text '{current_number}' is clickable.")
-        break
+    print('일반 1명 선택')
+
+     # "class='no'"이고 텍스트가 "1"인 요소를 클릭합니다.
+    element_no_1 = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//span[@class='no' and text()='3']"))
+    )
+    if element_no_1.is_displayed():
+      element_no_1.click()
+      print('1좌석 선택 완료')
+    else:
+      try: 
+      # "class='sreader mod'"의 텍스트가 "선택불가"인지 확인합니다.
+        current_number = 2
+        while current_number <= 16:
+          try:
+            # "class='sreader mod'" 요소가 "선택불가"인지 확인
+                element_sreader_mod = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, "//span[@class='sreader mod' and text()='선택불가']"))
+                )
+                # "선택불가" 텍스트가 존재하면 다음 숫자로 이동
+                current_number += 1
+          except TimeoutException:
+                # "선택불가" 텍스트가 없으면, 해당 숫자의 요소를 찾아 클릭하고 루프를 종료
+                element_no_next = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, f"//span[@class='no' and text()='{current_number}']"))
+                )
+                element_no_next.click()
+                print(f"Clicked element with class 'no' and text '{current_number}' because it is selectable.")
+                break
       except TimeoutException:
-        # 타임아웃 발생 시, 해당 숫자의 요소를 찾지 못했다고 가정하고 다음 숫자로 이동
-        print(f"Timeout occurred while trying to find element with class 'no' and text '{current_number}'.")
-        current_number += 1
+        print("Failed to locate element with class 'no' and text '1'.")
 
     #CGV_09_05 활성된 좌석 클릭
     driver.implicitly_wait(10)
@@ -289,7 +298,8 @@ try:
 
     #CGV_09_06 하단 [결제선택] 버튼 클릭
     driver.implicitly_wait(10)
-    driver.find_element(By.ID, 'tnb_step_btn_right').click()
+    time.sleep(3)
+    driver.find_element(By.CSS_SELECTOR, '#tnb_step_btn_right').click()
     print('CGV_09_06 결제선택 버튼 클릭')
 
   except Exception as e:
@@ -297,8 +307,90 @@ try:
     print(fail_reason)
     result_fail_list.append(tc_progress)
     result_reason_list.append(fail_reason)
+
+  #CGV_10 결제 진행
+  try:
+    #CGV_10_1 결제수단 신용카드 선택 확인
+    driver.implicitly_wait(10)
+    if driver.find_element(By.XPATH, "//input[@checked='checked']"):
+      print('cgv_10_1 신용카드 체크 확인')
+    else:
+      print('cgv_10_1 신용카드 체크 미확인')
+
+    #CGV_10_2 카드종류 드롭박스 클릭
+    # driver.implicitly_wait(10)
+    # driver.find_element(By.ID, 'lp_card_type').click()
+    time.sleep(2)
+    card_list = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'lp_card_type')))
+    card_list.click()
+    print('CGV_10_2 카드종류 드롭박스 클릭')
+
+    #CGV_10_3 BC카드 클릭
+    # driver.implicitly_wait(10)
+    # driver.find_element(By.XPATH, '//*[@id="lp_card_type"]/option[2]').click()
+    time.sleep(2)
+    select_card = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="lp_card_type"]/option[2]')))
+    select_card.click()
+    print('CGV_10_3 BC카드 클릭')
+
+    #CGV_10_4 하단 [결제하기]버튼 클릭
+    # driver.implicitly_wait(10)
+    # driver.find_element(By.XPATH, '//*[@id="tnb_step_btn_right"]').click()
+    payment_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="tnb_step_btn_right"]')))
+    payment_btn.click()
+    print('CGV_10_4  하단 [결제하기]버튼 클릭')
+
+    # WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'rsvDataframe')))
+    print('ss')
+
+    # reservation_pop = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[4]/div[1]/div/h4')))
+    time.sleep(3)
+    # reservation_pop = driver.find_element(By.CSS_SELECTOR, 'body > div.ft_layer_popup.popup_reservation_check > div.ft > a.reservation')
+    print('ff')
+    print('예매내역 확인 팝업 노출 확인')
+    time.sleep(3)
+    #CGV_10_5 약관동의 체크박스 선택
+    driver.implicitly_wait(10)
+    driver.find_element(By.ID, 'agreementAll').click()
+    print('약관동의')
+    driver.find_element(By.ID, 'resvConfirm').click()
+    print('결제내용 동의')
+    # if reservation_pop == '예매내역 확인':
+
+    #   print('예매내역 확인 팝업 노출 확인')
+    #   time.sleep(3)
+    #   #CGV_10_5 약관동의 체크박스 선택
+    #   driver.implicitly_wait(10)
+    #   driver.find_element(By.CSS_SELECTOR, '#agreementAll').click()
+    #   print('약관동의')
+    #   driver.find_element(By.CSS_SELECTOR, '#resvConfirm').click()
+    #   print('결제내용 동의')
+
+    # else:
+    #   print('예매내역 확인 팝업 노출 실패')
+
+    #CGV_10_6 [결제하기]버튼 클릭
+    time.sleep(3)
+    driver.implicitly_wait(10)
+    driver.find_element(By.CSS_SELECTOR, 'body > div.ft_layer_popup.popup_reservation_check > div.ft > a.reservation').click()
+
+    #CGV_10_7 [확인]버튼 클릭
+    driver.implicitly_wait(10)
+    payment_code = driver.find_element(By.XPATH, '//*[@id="qrCodeNo"]').text()
+    input_code = input('결제 코드를 입력해 주세요:')
+    if payment_code == input_code:
+      driver.find_element(By.XPATH, '/html/body/article/div/div[2]/div[4]/a').click()
+    else:
+      input_code = input('결제 코드를 다시 입력해 주세요:')
+      driver.find_element(By.XPATH, '/html/body/article/div/div[2]/div[4]/a').click()
+
+  except Exception as e:
+    fail_reason = f'CGV_10 결제 진행 실패 : {str(e)}'
+    print(fail_reason)
+    result_fail_list.append(tc_progress)
+    result_reason_list.append(fail_reason)
   
-  
+
   time.sleep(20)
 
 except Exception as e:
