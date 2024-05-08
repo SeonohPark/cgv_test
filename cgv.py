@@ -257,13 +257,13 @@ try:
     # driver.implicitly_wait(10)
     # driver.find_element(By.XPATH, '//*[@id="nop_group_adult"]/ul/li[2]/a').click()
     # print('CGV_09_04 인원 1명 선택 완료')
-    seaat_selector = WebDriverWait(driver, 10).until(
-      EC.presence_of_element_located((By.XPATH, "//span[@class='no' and text()='1']"))
+    seat_selector = WebDriverWait(driver, 10).until(
+      EC.presence_of_element_located((By.XPATH, "//*[@id='nop_group_adult']/ul/li[2]/a"))
     )
-    seaat_selector.click()
+    seat_selector.click()
     
     current_number = 2
-    while current_number <= 5:
+    while current_number <= 16:
       try:
         element_sreader_mod = WebDriverWait(driver, 10).until(
           EC.presence_of_element_located((By.XPATH, "//span[@class='sreader mod' and text()='선택불가']")) 
@@ -286,7 +286,6 @@ try:
     driver.implicitly_wait(10)
     driver.find_element(By.XPATH, '//*[@id="seats_list"]/div[1]/div[3]/div[2]/div/div[1]/a').click()
     print('활성된 좌석 클릭')
-
 
     #CGV_09_06 하단 [결제선택] 버튼 클릭
     driver.implicitly_wait(10)
