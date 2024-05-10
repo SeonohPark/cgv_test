@@ -36,7 +36,16 @@ try:
   print('CGV_01 cgv홈페이지 접속 성공')
   print(driver.title)
   print(driver.current_url)
+
+  #모든 윈도우 핸들을 가져온다
+  # orginal_window = driver.current_window_handle
+  # all_windows = driver.window_handles
   
+  #새로 열린 팝업 창으로 전환
+  # for window in all_windows:
+  #   if window != orginal_window:
+  #     driver.switch_to.window(window)
+  #     break
 
   # TC cgv_02 로그인 버튼 확인, 클릭
   try:
@@ -259,15 +268,14 @@ try:
       EC.presence_of_element_located((By.XPATH, "//*[@id='nop_group_adult']/ul/li[2]/a"))
     )
     seat_selector.click()
-    print('일반 1명 선택')
+    print('CGV_09_4 일반 1명 선택')
 
      # "class='no'"이고 텍스트가 "1"인 요소를 클릭합니다.
     element_no_1 = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//span[@class='no' and text()='3']"))
+        EC.presence_of_element_located((By.XPATH, "//span[@class='no' and text()='1']"))
     )
     if element_no_1.is_displayed():
       element_no_1.click()
-      print('1좌석 선택 완료')
     else:
       try: 
       # "class='sreader mod'"의 텍스트가 "선택불가"인지 확인합니다.
@@ -294,7 +302,7 @@ try:
     #CGV_09_05 활성된 좌석 클릭
     driver.implicitly_wait(10)
     driver.find_element(By.XPATH, '//*[@id="seats_list"]/div[1]/div[3]/div[2]/div/div[1]/a').click()
-    print('활성된 좌석 클릭')
+    print('CGV_09_5 활성된 좌석 클릭')
 
     #CGV_09_06 하단 [결제선택] 버튼 클릭
     driver.implicitly_wait(10)
@@ -318,68 +326,62 @@ try:
       print('cgv_10_1 신용카드 체크 미확인')
 
     #CGV_10_2 카드종류 드롭박스 클릭
-    # driver.implicitly_wait(10)
-    # driver.find_element(By.ID, 'lp_card_type').click()
     time.sleep(2)
     card_list = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'lp_card_type')))
     card_list.click()
     print('CGV_10_2 카드종류 드롭박스 클릭')
 
     #CGV_10_3 BC카드 클릭
-    # driver.implicitly_wait(10)
-    # driver.find_element(By.XPATH, '//*[@id="lp_card_type"]/option[2]').click()
     time.sleep(2)
     select_card = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="lp_card_type"]/option[2]')))
     select_card.click()
     print('CGV_10_3 BC카드 클릭')
 
     #CGV_10_4 하단 [결제하기]버튼 클릭
-    # driver.implicitly_wait(10)
-    # driver.find_element(By.XPATH, '//*[@id="tnb_step_btn_right"]').click()
     payment_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="tnb_step_btn_right"]')))
     payment_btn.click()
     print('CGV_10_4  하단 [결제하기]버튼 클릭')
-
-    # WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'rsvDataframe')))
-    print('ss')
-
-    # reservation_pop = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[4]/div[1]/div/h4')))
-    time.sleep(3)
-    # reservation_pop = driver.find_element(By.CSS_SELECTOR, 'body > div.ft_layer_popup.popup_reservation_check > div.ft > a.reservation')
-    print('ff')
     print('예매내역 확인 팝업 노출 확인')
+
     time.sleep(3)
     #CGV_10_5 약관동의 체크박스 선택
     driver.implicitly_wait(10)
     driver.find_element(By.ID, 'agreementAll').click()
-    print('약관동의')
+    print('CGV_10_5 약관동의')
     driver.find_element(By.ID, 'resvConfirm').click()
-    print('결제내용 동의')
-    # if reservation_pop == '예매내역 확인':
-
-    #   print('예매내역 확인 팝업 노출 확인')
-    #   time.sleep(3)
-    #   #CGV_10_5 약관동의 체크박스 선택
-    #   driver.implicitly_wait(10)
-    #   driver.find_element(By.CSS_SELECTOR, '#agreementAll').click()
-    #   print('약관동의')
-    #   driver.find_element(By.CSS_SELECTOR, '#resvConfirm').click()
-    #   print('결제내용 동의')
-
-    # else:
-    #   print('예매내역 확인 팝업 노출 실패')
+    print('CGV_10_6 결제내용 동의')
 
     #CGV_10_6 [결제하기]버튼 클릭
     time.sleep(3)
     driver.implicitly_wait(10)
     driver.find_element(By.CSS_SELECTOR, 'body > div.ft_layer_popup.popup_reservation_check > div.ft > a.reservation').click()
 
-    #CGV_10_7 [확인]버튼 클릭
+    time.sleep(5)
+    current_url = driver.current_url
+    print(current_url)
+
+    # 모든 창 핸들을 가져옵니다.
+    all_windows = driver.window_handles
+    target_url = "https://ui.vpay.co.kr/web2/qrpay/view?ct=qr&issurCdVal="
+    
+    for window in all_windows:
+    # 각 창으로 전환
+      driver.switch_to.window(window)
+      # 현재 창의 URL을 확인
+      current_url = driver.current_url
+      if target_url in current_url:
+          print("원하는 URL 창으로 포커스 이동 완료.")
+          break
+
+    print(current_url)
+
     driver.implicitly_wait(10)
-    payment_code = driver.find_element(By.XPATH, '//*[@id="qrCodeNo"]').text()
+    payment_code = driver.find_element(By.CSS_SELECTOR, '#qrCodeNo').text
     input_code = input('결제 코드를 입력해 주세요:')
+    #CGV_10_7 [확인]버튼 클릭
     if payment_code == input_code:
       driver.find_element(By.XPATH, '/html/body/article/div/div[2]/div[4]/a').click()
+      print('CGV_10_7 [확인]버튼 클릭')
     else:
       input_code = input('결제 코드를 다시 입력해 주세요:')
       driver.find_element(By.XPATH, '/html/body/article/div/div[2]/div[4]/a').click()
