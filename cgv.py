@@ -331,21 +331,21 @@ try:
         while current_number <= 16:
           try:
             # "class='sreader mod'" 요소가 "선택불가"인지 확인
-                element_sreader_mod = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, "//span[@class='sreader mod' and text()='선택불가']"))
-                )
-                # "선택불가" 텍스트가 존재하면 다음 숫자로 이동
-                current_number += 1
+            element_sreader_mod = WebDriverWait(driver, 10).until(
+              EC.presence_of_element_located((By.XPATH, "//span[@class='sreader mod' and text()='선택불가']"))
+            )
+            # "선택불가" 텍스트가 존재하면 다음 숫자로 이동
+            current_number += 1
           except TimeoutException:
-                # "선택불가" 텍스트가 없으면, 해당 숫자의 요소를 찾아 클릭하고 루프를 종료
-                element_no_next = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, f"//span[@class='no' and text()='{current_number}']"))
-                )
-                element_no_next.click()
-                print(f"Clicked element with class 'no' and text '{current_number}' because it is selectable.")
-                break
+            # "선택불가" 텍스트가 없으면, 해당 숫자의 요소를 찾아 클릭하고 루프를 종료
+            element_no_next = WebDriverWait(driver, 10).until(
+              EC.presence_of_element_located((By.XPATH, f"//span[@class='no' and text()='{current_number}']"))
+            )
+            element_no_next.click()
+            print(f"클릭할 수 있는 좌석이 없으면 '{current_number}' 좌석 선택")
+            break
       except TimeoutException:
-        print("Failed to locate element with class 'no' and text '1'.")
+        print("선택할 수 있는 좌석이 없음.")
 
     #CGV_09_05 활성된 좌석 클릭
     driver.implicitly_wait(10)
